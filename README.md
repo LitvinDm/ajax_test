@@ -32,5 +32,5 @@ db_name=
 ```
 7. Start application
 ```shell
-uvicorn main:app --reload    
+uvicorn main:app --reload
 ```
