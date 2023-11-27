@@ -49,11 +49,10 @@ def get_df():
 
 
 async def get_api_data(id: int = None):
-    # try:
+    # some caching possible if data unchanged/changed very rarely
     df = get_df()
 
     if id is not None:
-        # log id
         df = df[df['ID'] == int(id)]
 
     processed_data = []
@@ -101,6 +100,7 @@ def combine_data(df_api_data: List, df_db_data: List):
     joined_df = pd.merge(df_api, df_db, on='id', how='outer')
     joined_df['email'] = joined_df['email_x'].fillna(joined_df['email_y'])
     joined_df.drop(['email_x', 'email_y'], axis=1, inplace=True)
+    # there is an issue with reading reports as float. converting it to inv
     joined_df['reports'] = pd.to_numeric(joined_df['reports'], errors='coerce').astype('Int64')
     desired_order = ['id', 'email', 'phone', 'full_name', 'first_name', 'last_name', 'gender', 'birth', 'reports',
                      'position', 'hired', 'salary', 'team']
